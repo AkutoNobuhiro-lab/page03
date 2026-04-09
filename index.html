@@ -3,983 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word・Excel・PowerPointの違いと連携</title>
+    <title>タイピングの必要性とホームポジション</title>
+    <!-- Google Fonts: Inter (Latin) and Noto Sans JP -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* =========================================
-           1. THE SETUP & BASE STYLING
-        ========================================= */
+        /* Base Reset & Variables */
+        :root {
+            --bg-main: #f1f5f9;
+            --slide-bg: #ffffff;
+            --primary: #2563eb;
+            --primary-light: #eff6ff;
+            --accent: #ea580c;
+            --accent-light: #fff7ed;
+            --text-dark: #0f172a;
+            --text-muted: #475569;
+            --border: #e2e8f0;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-            display: grid;
-            gap: 50px;
-            grid-template-columns: 1fr;
-            margin: 0;
-            min-height: 100vh;
-            padding: 50px 0;
-            place-items: center;
-        }
-
-        /* Standard Slide Container (16:9 / 1280x720) */
-        .slide-container {
-            background-color: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.1);
+            background-color: var(--bg-main);
             display: flex;
             flex-direction: column;
-            font-family: 'Noto Sans JP', sans-serif;
-            height: 720px;
-            overflow: hidden;
-            padding: 45px 60px; /* 余白を最適化 */
-            position: relative;
+            align-items: center;
+            gap: 60px;
+            padding: 40px 0;
+            font-family: 'Inter', 'Noto Sans JP', sans-serif;
+            color: var(--text-dark);
+        }
+
+        /* Slide Container (1280x720) */
+        .slide-container {
             width: 1280px;
-        }
-
-        /* Decorative Header Bar */
-        .slide-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, #3b82f6 0%, #3b82f6 33%, #10b981 33%, #10b981 66%, #f59e0b 66%, #f59e0b 100%);
-        }
-
-        /* =========================================
-           2. TYPOGRAPHY & HEADER ALIGNMENT
-        ========================================= */
-        h2, h3, h4 {
-            color: #0f172a;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        p, li, .subtitle {
-            color: #475569;
-            line-height: 1.6;
-            margin: 0;
-        }
-
-        /* Header Block (Fixes title position at top) */
-        .slide-header {
-            width: 100%;
+            height: 720px;
+            background-color: var(--slide-bg);
+            display: flex;
+            flex-direction: column;
+            padding: 40px 60px;
+            position: relative;
+            box-shadow: var(--shadow);
+            overflow: hidden;
             flex-shrink: 0;
-            margin-bottom: 20px;
         }
 
+        /* Title Style */
         .slide-title {
             font-size: 40px;
-            letter-spacing: 0.02em;
-            margin-bottom: 8px;
-            text-align: left;
-        }
-
-        .subtitle {
-            font-size: 20px;
-            font-weight: 500;
-            text-align: left;
-            color: #64748b;
-        }
-
-        /* =========================================
-           3. LAYOUT DEFINITIONS & COMPONENTS
-        ========================================= */
-        /* Content Area (Perfect Center Alignment) */
-        .content-area {
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-            align-items: center;
-            justify-content: center; /* 縦方向のど真ん中 */
-            width: 100%;
-        }
-
-        /* Common Tile Style */
-        .tiled-content {
-            align-items: stretch;
-            display: flex;
-            gap: 24px;
-            justify-content: center; /* 横方向のど真ん中 */
-            width: 100%;
-        }
-
-        .tile {
-            background-color: #ffffff;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            padding: 30px 25px;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            transition: all 0.3s ease;
-        }
-
-        .tile:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.06);
-            border-color: #cbd5e1;
-        }
-
-        /* Slide 1 Specific */
-        .tile .icon-box {
-            align-items: center;
-            border-radius: 18px;
-            display: flex;
-            font-size: 36px;
-            height: 70px;
-            justify-content: center;
-            margin: 0 auto 20px;
-            width: 70px;
-            transition: transform 0.3s ease;
-        }
-
-        .tile:hover .icon-box {
-            transform: scale(1.08);
-        }
-
-        /* Application Colors & Themes */
-        .color-word .icon-box { background: linear-gradient(135deg, #eff6ff, #dbeafe); color: #2563eb; }
-        .color-word h3 { color: #1e40af; }
-        .color-word .badge { background-color: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
-
-        .color-excel .icon-box { background: linear-gradient(135deg, #f0fdf4, #dcfce7); color: #16a34a; }
-        .color-excel h3 { color: #166534; }
-        .color-excel .badge { background-color: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
-
-        .color-ppt .icon-box { background: linear-gradient(135deg, #fff7ed, #ffedd5); color: #ea580c; }
-        .color-ppt h3 { color: #9a3412; }
-        .color-ppt .badge { background-color: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
-
-        .tile h3 {
-            font-size: 24px;
-            margin-bottom: 12px;
-        }
-
-        .tile .badge {
-            border-radius: 30px;
-            display: inline-block;
-            font-size: 14px;
             font-weight: 700;
-            margin-bottom: 20px;
-            padding: 4px 16px;
+            margin-bottom: 30px;
+            border-left: 10px solid var(--primary);
+            padding-left: 20px;
+            line-height: 1.2;
+            z-index: 1;
         }
 
-        .tile .description {
-            font-size: 15px;
-            text-align: left;
-            color: #475569;
-        }
-
-        /* Image Wrapper for Charts */
-        .image-wrapper {
-            background-color: #f8fafc;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            border: 1px solid #f1f5f9;
-        }
-
-        /* Slide 2 Specific (4 Columns - Images) */
-        .four-cols {
-            max-width: 1160px;
-        }
-
-        .four-cols .image-wrapper {
-            height: 140px;
-            margin-bottom: 20px;
-        }
-
-        .four-cols h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-
-        .four-cols p {
-            font-size: 14px;
-            text-align: left;
-        }
-
-        /* Slide 5 Specific (3 Columns - Images) */
-        .three-cols {
-            max-width: 1080px;
+        /* Content Layout */
+        .content-area {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 30px;
-        }
-
-        .three-cols .tile {
-            padding: 30px 30px;
-        }
-
-        .three-cols .image-wrapper {
-            height: 160px;
+            flex-grow: 1;
+            z-index: 1;
+            min-height: 0; /* Important for flex child */
             margin-bottom: 25px;
         }
 
-        .three-cols h3 {
-            font-size: 22px;
-            margin-bottom: 15px;
-        }
-
-        .three-cols p {
-            font-size: 15px;
-            text-align: left;
-            line-height: 1.7;
-        }
-
-        /* Badges for Slide 5 */
-        .badge-ng {
-            background-color: #fef2f2;
-            color: #ef4444;
-            border: 1px solid #fecaca;
-        }
-
-        .badge-ok {
-            background-color: #eff6ff;
-            color: #3b82f6;
-            border: 1px solid #bfdbfe;
-        }
-
-        /* Marker underline style for highlights */
-        .highlight-text {
-            font-weight: 700;
-            color: #0f172a;
-            background: linear-gradient(transparent 60%, #fef08a 60%);
-            padding: 0 2px;
-        }
-
-        svg {
-            filter: drop-shadow(0px 3px 4px rgba(0, 0, 0, 0.05));
-        }
-
-        /* =========================================
-           Slide 3 Specific (Horizontal Flow Layout)
-        ========================================= */
-        .horizontal-flow-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            /* 左右対称に計算: 360 + 140 + 360 = 860px */
-            max-width: 860px; 
-            margin: 0 auto;
-        }
-
-        .flow-card {
-            background-color: #ffffff;
-            border-radius: 16px;
-            border: 2px solid #e2e8f0;
-            padding: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            transition: all 0.3s ease;
-            position: relative;
-            z-index: 2;
-        }
-
-        .flow-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.06);
-            border-color: #cbd5e1;
-        }
-
-        .flow-card-left {
-            width: 360px;
-        }
-
-        .flow-card-right {
-            width: 360px;
-        }
-
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 15px;
-        }
-
-        .card-header-texts {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .flow-card .icon-box {
-            width: 64px;
-            height: 64px;
-            border-radius: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            flex-shrink: 0;
-            margin: 0;
-        }
-
-        .flow-card .badge {
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 4px 12px;
-            margin-bottom: 4px;
-        }
-
-        .flow-card h3 {
-            font-size: 19px;
-            margin: 0;
-        }
-
-        .flow-card p.description {
-            font-size: 15px;
-            color: #475569;
-            text-align: left;
-            margin: 0;
-            line-height: 1.6;
-        }
-
-        .right-column {
+        /* Grid / Column flex */
+        .column {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            min-height: 0;
         }
 
-        .svg-connector {
-            width: 140px;
-            height: 240px;
-            flex-shrink: 0;
-            z-index: 1;
-            /* SVG自体を完全に中央に配置 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Hint Box */
-        .hint-box {
-            background-color: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 16px 24px;
-            border-radius: 12px;
-            margin: 30px auto 0; /* マージンを整理 */
-            width: 100%;
-            max-width: 860px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-        }
-
-        .hint-box .hint-icon {
-            background: #fef08a;
-            color: #ca8a04;
-            height: 40px;
-            width: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            flex-shrink: 0;
-        }
-
-        .hint-box p {
-            color: #334155;
-            font-size: 15px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        /* =========================================
-           Slide 4 Specific (Data & Conclusion)
-        ========================================= */
-        .slide4-content {
-            display: flex;
-            gap: 40px;
-            width: 100%;
-            max-width: 1080px;
-            align-items: stretch;
-        }
-
-        .data-panel, .conclusion-panel {
-            flex: 1; /* 完全な左右対称 (1:1) に設定 */
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
+        /* Tiles */
+        .tile {
+            background: #f8fafc;
+            border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 35px 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            padding: 24px;
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            flex: 1;
         }
 
-        .data-panel {
+        .tile-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .text-content {
+            font-size: 17px;
+            line-height: 1.5;
+            color: var(--text-muted);
+        }
+
+        /* Emphasis Styles */
+        .highlight-blue {
+            color: var(--text-dark);
+            font-weight: 700;
+            background: linear-gradient(transparent 70%, #dbeafe 70%);
+        }
+
+        .highlight-orange {
+            color: #7c2d12;
+            font-weight: 700;
+            background: linear-gradient(transparent 70%, #ffedd5 70%);
+        }
+
+        .emphasis-box {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            display: inline-block;
+            color: var(--primary);
+            font-size: 19px;
+            font-weight: 700;
+            border: 1px solid #bfdbfe;
+        }
+
+        /* Comparison Table (Slide 1) */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            flex-shrink: 0;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 14px;
+            text-align: center;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 17px;
+        }
+
+        .comparison-table th {
+            background: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 500;
+            width: 25%;
+        }
+
+        .comparison-table .header-row th {
+            background: var(--text-dark);
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .comparison-table .pc-col {
+            background: var(--primary-light);
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* Lists */
+        ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        li {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        li::before {
+            content: '\f058';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        /* Bottom Summary Banner */
+        .summary-banner {
+            background: var(--text-dark);
+            padding: 18px 30px;
+            border-radius: 16px;
+            display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 1;
+            flex-shrink: 0;
         }
 
-        .conclusion-panel {
+        .summary-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .summary-text span.blue-highlight {
+            color: #60a5fa;
+        }
+
+        /* Decoration Background */
+        .bg-circle {
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.04) 0%, transparent 70%);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+            z-index: 0;
+        }
+
+        /* Image Display */
+        .image-tile {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
             justify-content: center;
-            position: relative;
+            height: 100%;
             overflow: hidden;
         }
 
-        .conclusion-panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 8px;
-            height: 100%;
-            background: #ef4444; /* アクセントライン */
+        .image-tile img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
         }
-
-        .data-panel h3 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #1e293b;
-            text-align: center;
-        }
-
-        .chart-container {
-            position: relative;
-            width: 200px;
-            height: 200px;
-            margin-bottom: 25px;
-        }
-
-        .chart-center-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            line-height: 1.1;
-        }
-
-        .chart-center-text .percent {
-            font-size: 44px;
-            font-weight: 700;
-            color: #ef4444;
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        .chart-center-text .label {
-            font-size: 16px;
-            font-weight: 700;
-            color: #475569;
-        }
-
-        .senses-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            width: 100%;
-            max-width: 320px;
-        }
-
-        .senses-list li {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 15px;
-            border-bottom: 1px solid #f1f5f9;
-            font-size: 16px;
-        }
-
-        .senses-list li:last-child {
-            border-bottom: none;
-        }
-
-        .senses-list .sense-name {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            color: #1e293b;
-        }
-
-        .senses-list .dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-        }
-
-        .conclusion-panel h3 {
-            color: #0f172a;
-            font-size: 26px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .conclusion-panel p.main-message {
-            color: #475569;
-            font-size: 16px;
-            line-height: 1.7;
-            margin-bottom: 25px;
-        }
-
-        .action-cards {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .action-card {
-            padding: 16px 20px;
-            border-radius: 12px;
-            display: flex;
-            align-items: flex-start;
-            gap: 16px;
-            border: 1px solid transparent;
-        }
-
-        /* Excelの色使い */
-        .ac-excel {
-            background-color: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-
-        .ac-excel i {
-            color: #16a34a;
-            font-size: 26px;
-            margin-top: 2px;
-        }
-
-        .ac-excel h4 {
-            color: #15803d;
-            font-size: 18px;
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-
-        /* Word/PPTの色使い */
-        .ac-wordppt {
-            background-color: #fff7ed;
-            border-color: #fed7aa;
-        }
-
-        .ac-wordppt i {
-            color: #ea580c;
-            font-size: 26px;
-            margin-top: 2px;
-        }
-
-        .ac-wordppt h4 {
-            color: #c2410c;
-            font-size: 18px;
-            margin-bottom: 6px;
-            font-weight: 700;
-        }
-
-        .action-card .ac-content p {
-            font-size: 14.5px;
-            color: #475569;
-            margin: 0;
-            line-height: 1.6;
-        }
-
     </style>
 </head>
 <body>
 
-    <!-- Slide 1: Word, Excel, PowerPointの違い -->
-    <div class="slide-container" id="slide1">
-        <div class="slide-header">
-            <h2 class="slide-title">１．Word・Excel・PowerPointの違い</h2>
-            <p class="subtitle">どれを使えばいい？ それぞれの得意なこと（特徴）</p>
-        </div>
-        
-        <div class="content-area">
-            <div class="tiled-content">
-                <!-- Word Tile -->
-                <div class="tile color-word">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-file-word"></i>
-                    </div>
-                    <h3>Word <span style="font-size:16px; color:#64748b; font-weight:500;">(ワード)</span></h3>
-                    <div><span class="badge">「文章」を書くのが得意！</span></div>
-                    <p class="description">
-                        <strong>公式な文書・レポート用紙</strong>のようなもの。<br><br>
-                        大学の課題レポート、論文、実験の報告書など、文字中心で構成され、A4サイズでの印刷やPDF提出が前提となる公式な文書を作成する時に使います。
-                    </p>
-                </div>
+<!-- Slide 1: Roles of Devices -->
+<div class="slide-container">
+    <div class="bg-circle"></div>
+    <h2 class="slide-title">デバイスの役割を正しく選ぶ</h2>
 
-                <!-- Excel Tile -->
-                <div class="tile color-excel">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-file-excel"></i>
-                    </div>
-                    <h3>Excel <span style="font-size:16px; color:#64748b; font-weight:500;">(エクセル)</span></h3>
-                    <div><span class="badge">「計算」と「表」が得意！</span></div>
-                    <p class="description">
-                        <strong>高機能なデータ集計・分析ツール</strong>。<br><br>
-                        実験データの集計・分析、サークルの会計管理、アンケート結果のグラフ化など、大量の数値データを効率的に処理し、視覚化したい時に使います。
-                    </p>
-                </div>
+    <div class="content-area" style="display: flex; flex-direction: column; gap: 20px;">
+        <table class="comparison-table">
+            <tr class="header-row">
+                <th>カテゴリー</th>
+                <td>スマホ / iPad</td>
+                <td class="pc-col">PC</td>
+            </tr>
+            <tr>
+                <th>目的</th>
+                <td>コンテンツの消費</td>
+                <td class="pc-col">価値の生産</td>
+            </tr>
+            <tr>
+                <th>主な行為</th>
+                <td>閲覧・電話・チャット</td>
+                <td class="pc-col">分析・執筆・創造</td>
+            </tr>
+            <tr>
+                <th>操作</th>
+                <td>タップ、スワイプ、フリック、ピンチ</td>
+                <td class="pc-col">キーボード・マウス</td>
+            </tr>
+            <tr>
+                <th>重要なシチュエーション</th>
+                <td>日常生活に欠かせないもの</td>
+                <td class="pc-col">仕事の作業に欠かせないもの</td>
+            </tr>
+        </table>
 
-                <!-- PowerPoint Tile -->
-                <div class="tile color-ppt">
-                    <div class="icon-box">
-                        <i class="fa-solid fa-file-powerpoint"></i>
-                    </div>
-                    <h3>PowerPoint <span style="font-size:16px; color:#64748b; font-weight:500;">(パワポ)</span></h3>
-                    <div><span class="badge">「発表・伝える」のが得意！</span></div>
-                    <p class="description">
-                        <strong>視覚的なプレゼンテーションボード</strong>。<br><br>
-                        ゼミでの研究発表、企画の提案、実験データや作品のプレゼンなど、スライドをスクリーンに映し出し、大勢の前で視覚的に情報を伝えたい時に使います。
-                    </p>
-                </div>
+        <div class="tile" style="background: var(--accent-light); border-color: #fed7aa; flex: 1; min-height: 0; padding: 25px;">
+            <div class="tile-header" style="color: var(--accent);">
+                <i class="fa-solid fa-microchip"></i>
+                <span>理工学部生・エンジニアへ</span>
+            </div>
+            <div class="text-content" style="color: #7c2d12; font-size: 19px;">
+                レポート作成やプログラミングにおいて、タイピングは<span class="highlight-orange">「思考をコードに変換する速度」</span>そのものです。これがエンジニアとしての基礎スキルであることを理解してください。
             </div>
         </div>
     </div>
 
-    <!-- Slide 2: Excelのグラフの種類 -->
-    <div class="slide-container" id="slide2">
-        <div class="slide-header">
-            <h2 class="slide-title">２．Excelで作成できる代表的なグラフ</h2>
-            <p class="subtitle">データの「見せたい目的」に合わせて、最適なグラフを選びましょう。</p>
-        </div>
-        
-        <div class="content-area">
-            <div class="tiled-content four-cols">
-                <!-- Bar Chart -->
-                <div class="tile">
-                    <div class="image-wrapper">
-                        <svg viewBox="0 0 100 100" width="100" height="100" fill="none">
-                            <line x1="10" y1="90" x2="90" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <line x1="10" y1="10" x2="10" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <rect x="20" y="50" width="15" height="40" fill="#3b82f6" rx="3" />
-                            <rect x="45" y="20" width="15" height="70" fill="#3b82f6" rx="3" />
-                            <rect x="70" y="65" width="15" height="25" fill="#3b82f6" rx="3" />
-                        </svg>
-                    </div>
-                    <h3>棒グラフ</h3>
-                    <p>
-                        データの<span class="highlight-text">大小を比較</span>するのに最適です。<br><br>
-                        例：条件ごとの実験結果の比較、学部別の学生数の比較、アンケート項目別の回答数など。
-                    </p>
-                </div>
-
-                <!-- Line Chart -->
-                <div class="tile">
-                    <div class="image-wrapper">
-                        <svg viewBox="0 0 100 100" width="100" height="100" fill="none">
-                            <line x1="10" y1="90" x2="90" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <line x1="10" y1="10" x2="10" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <polyline points="20,70 45,40 70,55 90,20" stroke="#10b981" fill="none" stroke-width="6" stroke-linejoin="round" />
-                            <circle cx="20" cy="70" r="5" fill="#ffffff" stroke="#10b981" stroke-width="3" />
-                            <circle cx="45" cy="40" r="5" fill="#ffffff" stroke="#10b981" stroke-width="3" />
-                            <circle cx="70" cy="55" r="5" fill="#ffffff" stroke="#10b981" stroke-width="3" />
-                            <circle cx="90" cy="20" r="5" fill="#ffffff" stroke="#10b981" stroke-width="3" />
-                        </svg>
-                    </div>
-                    <h3>折れ線グラフ</h3>
-                    <p>
-                        時間経過による<span class="highlight-text">推移・変化</span>を見るのに最適です。<br><br>
-                        例：時間経過に伴う温度変化（実験）、月ごとの学習時間の推移、年次別の傾向など。
-                    </p>
-                </div>
-
-                <!-- Pie Chart -->
-                <div class="tile">
-                    <div class="image-wrapper">
-                        <svg viewBox="0 0 100 100" width="100" height="100" fill="none">
-                            <circle cx="50" cy="50" r="40" fill="#fef08a" />
-                            <path d="M 50 50 L 50 10 A 40 40 0 0 1 90 50 Z" fill="#f59e0b" />
-                            <path d="M 50 50 L 90 50 A 40 40 0 0 1 21.7 78.3 Z" fill="#fbbf24" />
-                        </svg>
-                    </div>
-                    <h3>円グラフ</h3>
-                    <p>
-                        全体に対する<span class="highlight-text">内訳・割合</span>を見るのに最適です。<br><br>
-                        例：アンケートの回答比率、サークルの予算内訳、ある集団における属性の構成比など。
-                    </p>
-                </div>
-
-                <!-- Scatter Plot -->
-                <div class="tile">
-                    <div class="image-wrapper">
-                        <svg viewBox="0 0 100 100" width="100" height="100" fill="none">
-                            <line x1="10" y1="90" x2="90" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <line x1="10" y1="10" x2="10" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <circle cx="25" cy="75" r="4" fill="#ef4444" />
-                            <circle cx="35" cy="60" r="4" fill="#ef4444" />
-                            <circle cx="40" cy="80" r="4" fill="#ef4444" />
-                            <circle cx="55" cy="50" r="4" fill="#ef4444" />
-                            <circle cx="65" cy="35" r="4" fill="#ef4444" />
-                            <circle cx="75" cy="45" r="4" fill="#ef4444" />
-                            <circle cx="85" cy="20" r="4" fill="#ef4444" />
-                            <circle cx="30" cy="65" r="4" fill="#ef4444" />
-                            <circle cx="60" cy="40" r="4" fill="#ef4444" />
-                            <circle cx="50" cy="65" r="4" fill="#ef4444" />
-                            <circle cx="70" cy="25" r="4" fill="#ef4444" />
-                            <circle cx="80" cy="35" r="4" fill="#ef4444" />
-                        </svg>
-                    </div>
-                    <h3>散布図</h3>
-                    <p>
-                        2つのデータの<span class="highlight-text">関係性（相関）</span>を見るのに最適です。<br><br>
-                        例：2つの実験変数の相関関係、学習時間とテスト点数の関係など。
-                    </p>
-                </div>
-            </div>
+    <div class="summary-banner" style="background: var(--accent); border: 3px solid rgba(255,255,255,0.2);">
+        <div class="summary-text" style="font-size: 24px;">
+            目的に応じて道具を使い分ける。<span style="background: rgba(0,0,0,0.1); padding: 2px 10px; border-radius: 6px;">「生産」の主役は常にキーボード。</span>
         </div>
     </div>
+</div>
 
-    <!-- Slide 3: 連携・相互関係 (Horizontal Flow) -->
-    <div class="slide-container" id="slide3">
-        <div class="slide-header">
-            <h2 class="slide-title">３．ソフト同士の連携（相互関係）</h2>
-            <p class="subtitle">それぞれ独立しているのではなく、組み合わせて「データ」を活かすのが基本です。</p>
-        </div>
-        
-        <div class="content-area">
-            
-            <div class="horizontal-flow-wrapper">
-                
-                <!-- Left: Excel -->
-                <div class="flow-card flow-card-left color-excel">
-                    <div class="card-header">
-                        <div class="icon-box"><i class="fa-solid fa-file-excel"></i></div>
-                        <div class="card-header-texts">
-                            <span class="badge">STEP 1</span>
-                            <h3>データの集計・分析</h3>
-                        </div>
-                    </div>
-                    <p class="description">実験やアンケートのデータを<strong>Excel</strong>で集計し、目的に合った分かりやすい表やグラフを作成する。</p>
+<!-- Slide 2: Necessity of Typing -->
+<div class="slide-container">
+    <div class="bg-circle"></div>
+    <h2 class="slide-title">タッチタイピングの必要性</h2>
+
+    <div class="content-area">
+        <div class="column">
+            <div class="tile">
+                <div class="tile-header">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>現状と背景</span>
                 </div>
-
-                <!-- Center: Symmetric SVG Connector -->
-                <div class="svg-connector">
-                    <svg width="140" height="240" viewBox="0 0 140 240">
-                        <!-- Left Base Line (Middle) -->
-                        <path d="M 0 120 L 30 120" stroke="#94a3b8" stroke-width="3" fill="none" />
-                        
-                        <!-- Top Branch -->
-                        <path d="M 30 120 Q 50 120 50 90 L 50 60 Q 50 30 70 30 L 135 30" stroke="#94a3b8" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
-                        <polygon points="140,30 130,24 130,36" fill="#94a3b8" />
-                        
-                        <!-- Bottom Branch -->
-                        <path d="M 30 120 Q 50 120 50 150 L 50 180 Q 50 210 70 210 L 135 210" stroke="#94a3b8" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
-                        <polygon points="140,210 130,204 130,216" fill="#94a3b8" />
-
-                        <!-- Center Action Label -->
-                        <rect x="5" y="102" width="130" height="36" rx="18" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
-                        <text x="70" y="125" text-anchor="middle" fill="#475569" font-size="12" font-weight="700" font-family="'Noto Sans JP', sans-serif">
-                            コピー＆ペースト
-                        </text>
-                    </svg>
-                </div>
-
-                <!-- Right: Word & PPT -->
-                <div class="right-column">
-                    <!-- Word -->
-                    <div class="flow-card flow-card-right color-word">
-                        <div class="card-header">
-                            <div class="icon-box"><i class="fa-solid fa-file-word"></i></div>
-                            <div class="card-header-texts">
-                                <span class="badge">STEP 2-A</span>
-                                <h3>レポート作成</h3>
-                            </div>
-                        </div>
-                        <p class="description"><strong>Word</strong>にグラフを貼り付け、詳細な考察や結論を肉付けし、「提出用の公式レポート」に仕上げる。</p>
-                    </div>
-                    
-                    <!-- PowerPoint -->
-                    <div class="flow-card flow-card-right color-ppt">
-                        <div class="card-header">
-                            <div class="icon-box"><i class="fa-solid fa-file-powerpoint"></i></div>
-                            <div class="card-header-texts">
-                                <span class="badge">STEP 2-B</span>
-                                <h3>プレゼン資料作成</h3>
-                            </div>
-                        </div>
-                        <p class="description"><strong>PowerPoint</strong>にグラフを貼り付け、要点を大きな文字で強調し、「発表用の見せるスライド」に仕上げる。</p>
-                    </div>
+                <div class="text-content">
+                    スマホの普及によりキーボードを操作しない層が増加し、<span class="highlight-blue">スキル保持者は減少傾向</span>にあります。<br><br>
+                    一方で、実社会では<span class="highlight-blue">資料作成やメール対応、データの管理</span>など、PC操作は避けて通れない必須スキルです。
                 </div>
             </div>
 
-            <!-- Hint Box -->
-            <div class="hint-box">
-                <div class="hint-icon"><i class="fa-solid fa-lightbulb"></i></div>
-                <p>データ（グラフや表）は必ず「Excel」で作成してから、WordやPowerPointに貼り付けて構成しましょう</p>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Slide 4: なぜ「見せ方」が重要なのか（五感のデータ） -->
-    <div class="slide-container" id="slide4">
-        <div class="slide-header">
-            <h2 class="slide-title">４．なぜ「分かりやすい資料・グラフ」が重要なのか？</h2>
-            <p class="subtitle">人間が情報を受け取る際、実は「見た目（視覚）」が圧倒的な割合を占めています。</p>
-        </div>
-        
-        <div class="content-area">
-            <div class="slide4-content">
-                
-                <!-- Left: Data Panel (五感の割合) -->
-                <div class="data-panel">
-                    <h3>人間が情報を得る「五感」の割合</h3>
-                    
-                    <div class="chart-container">
-                        <svg viewBox="0 0 100 100" width="100%" height="100%">
-                            <!-- 1. その他（約6%）のベース -->
-                            <circle cx="50" cy="50" r="40" fill="none" stroke="#e2e8f0" stroke-width="16" />
-                            
-                            <!-- 2. 聴覚 + 視覚（約94%）-->
-                            <!-- 円周=251.3 / 94%=236.2 -->
-                            <circle cx="50" cy="50" r="40" fill="none" stroke="#3b82f6" stroke-width="16" stroke-dasharray="236.2 251.3" transform="rotate(-90 50 50)" />
-                            
-                            <!-- 3. 視覚のみ（約83%） -->
-                            <!-- 円周=251.3 / 83%=208.6 -->
-                            <circle cx="50" cy="50" r="40" fill="none" stroke="#ef4444" stroke-width="16" stroke-dasharray="208.6 251.3" transform="rotate(-90 50 50)" />
-                        </svg>
-                        <div class="chart-center-text">
-                            <div class="label">視覚（目）</div>
-                            <div class="percent">83<span style="font-size:22px;">%</span></div>
-                        </div>
+            <div class="tile">
+                <div class="tile-header">
+                    <i class="fa-solid fa-bolt"></i>
+                    <span>なぜ今、重要なのか</span>
+                </div>
+                <div class="text-content">
+                    求められるのは<span class="highlight-blue">PCでの生産性</span>。タイピングの遅さは、仕事の作業の遅れに直結します。
+                    <div style="text-align: center;">
+                        <div class="emphasis-box">タイピング ＝ 仕事を支える「基礎学力」</div>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                    <ul class="senses-list">
-                        <li>
-                            <div class="sense-name"><div class="dot" style="background:#ef4444;"></div> 視覚（目）</div>
-                            <div style="font-weight:700; color:#ef4444;">約 83％</div>
-                        </li>
-                        <li>
-                            <div class="sense-name"><div class="dot" style="background:#3b82f6;"></div> 聴覚（耳）</div>
-                            <div style="font-weight:700; color:#3b82f6;">約 11％</div>
-                        </li>
-                        <li>
-                            <div class="sense-name"><div class="dot" style="background:#e2e8f0;"></div> その他（嗅覚など）</div>
-                            <div style="color:#64748b;">約 6％</div>
-                        </li>
+        <div class="column">
+            <div class="tile" style="height: 100%; border-left: 8px solid var(--primary);">
+                <div class="tile-header">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>タイピング習得による4つのメリット</span>
+                </div>
+                <div class="text-content">
+                    <ul>
+                        <li><span class="highlight-blue">圧倒的なスピード</span><br>作業効率が向上</li>
+                        <li><span class="highlight-blue">思考を止めない</span><br>画面に集中し、アウトプットを最大化</li>
+                        <li><span class="highlight-blue">疲れにくい身体</span><br>正しい姿勢と視線で負担を軽減</li>
+                        <li><span class="highlight-blue">PCの習熟度</span><br>PC操作の理解度に差が出ます</li>
                     </ul>
                 </div>
-
-                <!-- Right: Conclusion Panel -->
-                <div class="conclusion-panel">
-                    <h3><i class="fa-solid fa-bullseye" style="color: #ef4444;"></i> だからこそ「見せ方」が重要！</h3>
-                    
-                    <p class="main-message">
-                        どんなに素晴らしい実験結果や考察があっても、<span class="highlight-text">「文字だけの羅列」や「ただの数字の表」では、相手に内容が半分も伝わりません。</span>人は情報の8割以上を「視覚」に頼って判断しているからです。
-                    </p>
-
-                    <div class="action-cards">
-                        <!-- Excel Action -->
-                        <div class="action-card ac-excel">
-                            <i class="fa-solid fa-chart-pie"></i>
-                            <div class="ac-content">
-                                <h4>Excelの役割</h4>
-                                <p>数字の羅列を、パッと見て直感的に大小や推移がわかる<strong>「グラフ（図）」に変換</strong>する。</p>
-                            </div>
-                        </div>
-                        
-                        <!-- Word/PPT Action -->
-                        <div class="action-card ac-wordppt">
-                            <i class="fa-solid fa-desktop"></i>
-                            <div class="ac-content">
-                                <h4>Word / PPTの役割</h4>
-                                <p>グラフを適切な位置に配置し、フォントの大きさや色でメリハリをつけ、<strong>「視覚的に読みやすい資料」をデザイン</strong>する。</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
     </div>
 
-    <!-- Slide 5: グラフの色使いによる見え方の違い -->
-    <div class="slide-container" id="slide5">
-        <div class="slide-header">
-            <h2 class="slide-title">５．グラフの「色使い」で見やすさは劇的に変わる！</h2>
-            <p class="subtitle">目的に合わせた適切な配色で、どこを見てほしいのかメッセージを明確にしよう。</p>
+    <div class="summary-banner">
+        <div class="summary-text">
+            スマホは使えて当たり前。社会では<span class="blue-highlight">「正確かつ迅速なPC操作」</span>が評価される。
         </div>
-        
-        <div class="content-area">
-            <div class="tiled-content three-cols">
-                
-                <!-- Tile 1: NG (Too Colorful) -->
-                <div class="tile">
-                    <div class="badge badge-ng" style="margin-bottom:15px; display:inline-block; padding:4px 16px; border-radius:20px; font-weight:700;">
-                        <i class="fa-solid fa-xmark"></i> NG例
-                    </div>
-                    <h3>無意味なカラフル</h3>
-                    <div class="image-wrapper">
-                        <!-- Colorful SVG Chart -->
-                        <svg viewBox="0 0 100 100" width="120" height="120" fill="none">
-                            <line x1="5" y1="90" x2="95" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <rect x="15" y="45" width="12" height="45" fill="#ef4444" rx="2" />
-                            <rect x="35" y="20" width="12" height="70" fill="#22c55e" rx="2" />
-                            <rect x="55" y="60" width="12" height="30" fill="#eab308" rx="2" />
-                            <rect x="75" y="30" width="12" height="60" fill="#a855f7" rx="2" />
-                        </svg>
-                    </div>
-                    <p>
-                        棒グラフの色をすべてバラバラの原色にすると、<span class="highlight-text" style="background: linear-gradient(transparent 60%, #fecaca 60%);">目がチカチカ</span>し、何が一番重要でどこを見てほしいのか相手に伝わりません。※白黒のシンプルなグラフを作成しましょう。
-                    </p>
-                </div>
+    </div>
+</div>
 
-                <!-- Tile 2: OK (Accent Color) -->
-                <div class="tile">
-                    <div class="badge badge-ok" style="margin-bottom:15px; display:inline-block; padding:4px 16px; border-radius:20px; font-weight:700;">
-                        <i class="fa-solid fa-check"></i> OK例 ①
-                    </div>
-                    <h3>1点だけを「原色」で強調</h3>
-                    <div class="image-wrapper">
-                        <!-- Accent SVG Chart -->
-                        <svg viewBox="0 0 100 100" width="120" height="120" fill="none">
-                            <line x1="5" y1="90" x2="95" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <rect x="15" y="45" width="12" height="45" fill="#cbd5e1" rx="2" />
-                            <rect x="35" y="20" width="12" height="70" fill="#ef4444" rx="2" /> <!-- Accent -->
-                            <rect x="55" y="60" width="12" height="30" fill="#cbd5e1" rx="2" />
-                            <rect x="75" y="30" width="12" height="60" fill="#cbd5e1" rx="2" />
-                        </svg>
-                    </div>
-                    <p>
-                        一番注目してほしいデータ<strong style="color:#ef4444;">だけ</strong>に原色（アクセントカラー）を使い、他を控えめな色（グレー等）にすると、メッセージが際立ちます。
-                    </p>
-                </div>
+<!-- Slide 3: Training Steps & Home Position -->
+<div class="slide-container">
+    <div class="bg-circle"></div>
+    <h2 class="slide-title">練習の進め方：ホームポジション</h2>
 
-                <!-- Tile 3: OK (Gradient/Monochrome) -->
-                <div class="tile">
-                    <div class="badge badge-ok" style="margin-bottom:15px; display:inline-block; padding:4px 16px; border-radius:20px; font-weight:700;">
-                        <i class="fa-solid fa-check"></i> OK例 ②
-                    </div>
-                    <h3>グラデーションで順序を示す</h3>
-                    <div class="image-wrapper">
-                        <!-- Gradient SVG Chart -->
-                        <svg viewBox="0 0 100 100" width="120" height="120" fill="none">
-                            <line x1="5" y1="90" x2="95" y2="90" stroke="#cbd5e1" stroke-width="4" stroke-linecap="round" />
-                            <rect x="15" y="60" width="12" height="30" fill="#93c5fd" rx="2" />
-                            <rect x="35" y="50" width="12" height="40" fill="#60a5fa" rx="2" />
-                            <rect x="55" y="35" width="12" height="55" fill="#3b82f6" rx="2" />
-                            <rect x="75" y="20" width="12" height="70" fill="#1d4ed8" rx="2" />
-                        </svg>
-                    </div>
-                    <p>
-                        データの大きさや時間的な順序を表す場合は、<span class="highlight-text">同系色のグラデーション（濃淡）</span>を使うと、視覚的に整理されて見やすくなります。※あまりに薄い色だと見づらい可能性もあります。
-                    </p>
+    <div class="content-area">
+        <div class="column">
+            <div class="tile">
+                <div class="tile-header">
+                    <i class="fa-solid fa-keyboard"></i>
+                    <span>ホームポジションの重要性</span>
                 </div>
+                <div class="text-content">
+                    <span class="highlight-blue">【ホームポジション】</span>とは、タイピングを開始する際の基本位置です。
+                    <ul>
+                        <li><span class="highlight-blue">目印：</span>FとJにある突起を人差し指で探す</li>
+                        <li><span class="highlight-blue">基本：</span>打ち終わるたびに、指をここに戻す</li>
+                        <li><span class="highlight-blue">効果：</span>手元を見ずに正確に打つための条件</li>
+                    </ul>
+                </div>
+            </div>
 
+            <div class="tile">
+                <div class="tile-header">
+                    <i class="fa-solid fa-hands"></i>
+                    <span>左右の分担と指の役割</span>
+                </div>
+                <div class="text-content">
+                    中央を境に<span class="highlight-blue">左手と右手の担当エリア</span>が決まっています。
+                    <br><br>
+                    全ての指を適切に動員することで、最小限の動きで高速入力が可能になります。手元を見ない「脱・自己流」が上達の鍵です。
+                </div>
+            </div>
+        </div>
+
+        <div class="column">
+            <div class="image-tile">
+                <img src="a5740fb6-dc27-4ba8-9daa-cdede06229a8.png" alt="Keyboard Home Position and Fingering Chart">
             </div>
         </div>
     </div>
+
+    <div class="summary-banner">
+        <div class="summary-text">
+            「手元を見ない」ための第一歩は、<span class="blue-highlight">常に基本の位置に指を戻す</span>ことです。
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
-```
